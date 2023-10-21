@@ -1,0 +1,9 @@
+{% comment %}https://github.com/Shopify/dawn/blob/main/snippets/header-drawer.liquid{% endcomment %}
+
+<ul>
+    {%- for link in section.settings.menu.links -%}
+    <li>
+        <a href="{{ link.url }}">{{ link.title }}</a>
+    </li>
+    {%- endfor -%}
+</ul>
