@@ -1,1 +1,1 @@
-# dusk-base-231020
+# Dusk base theme

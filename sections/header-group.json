@@ -1,7 +1,13 @@
 {
-  "name": "t:sections.header.name",
+  "name": "Header",
   "type": "header",
   "sections": {
+    "header-announcement-bar": {
+      "type": "header-announcement-bar",
+      "settings": {
+        "text": "Free shipping on all orders over $50"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {
@@ -9,5 +15,5 @@
       }
     }
   },
-  "order": ["header"]
+  "order": ["header-announcement-bar", "header"]
 }
