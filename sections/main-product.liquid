@@ -1,0 +1,24 @@
+{% assign variant_images = product.images %}
+
+{% assign variant_image = variant_images | first %}
+
+{{ product | json }}
+
+{% if variant_image %}
+  <div class="product__image-wrapper">
+    <img src="{{ variant_image | img_url: '1024x1024' }}" alt="{{ product.title | escape }}">
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": []
+}
+{% endschema %}
