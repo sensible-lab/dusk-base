@@ -29,7 +29,12 @@
         <div class="h-24 w-24 bg-amber-500"></div>
         <div class="h-24 w-24 bg-amber-500"></div>
       </div>
-      <div class="pointer-events-none sticky bottom-0 flex justify-end">
+      <div
+        class="pointer-events-none sticky -bottom-1 flex h-24 justify-end"
+        x-data="{ pinned: true }"
+        x-intersect:enter.threshold.100="pinned = false"
+        x-intersect:leave.threshold.100="pinned = true"
+      >
         <div class="pointer-events-auto h-24 w-24 bg-amber-950"></div>
       </div>
     </div>
