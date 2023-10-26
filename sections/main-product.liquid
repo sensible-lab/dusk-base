@@ -19,23 +19,30 @@
     <div class="flex h-12 w-12 items-center justify-center border border-gray-100 bg-white">B2</div>
   </div>
   <div class="border-t border-gray-100 bg-white">
-    <div class="relative">
+    <div class="relative" x-data="{ pinned: true }">
       <div class="relative h-28 px-8 pt-4">
-        <h1 class="mr-28">Flamenco clutch in nappa calfskin</h1>
+        <h1 class="mr-28 font-bold">Flamenco clutch in nappa calfskin</h1>
         <div>16 variants</div>
       </div>
       <div class="h-8"></div>
       <div class="absolute left-0 top-36 flex w-full px-8">
-        <div class="h-24 w-24 bg-amber-500"></div>
-        <div class="h-24 w-24 bg-amber-500"></div>
+        <div class="flex" x-ref="productVariantButtons">
+          <div class="h-24 w-24 bg-amber-500"></div>
+          <div class="h-24 w-24 bg-amber-500"></div>
+        </div>
       </div>
       <div
-        class="pointer-events-none sticky -bottom-1 flex h-24 justify-end"
-        x-data="{ pinned: true }"
-        x-intersect:enter.threshold.100="pinned = false"
-        x-intersect:leave.threshold.100="pinned = true"
+        class="pointer-events-none sticky bottom-0 flex h-24 justify-end"
       >
-        <div class="pointer-events-auto h-24 w-24 bg-amber-950"></div>
+        <div
+          class="absolute top-full h-1 w-1"
+          x-intersect:enter.threshold.100="pinned = false;"
+          x-intersect:leave.threshold.100="pinned = true;"
+        ></div>
+        <div
+          class="pointer-events-auto h-24 w-24 bg-amber-950 transition-[margin-right]"
+          :style="!pinned && { 'margin-right': (window.innerWidth - $refs.productVariantButtons.getBoundingClientRect().left - $refs.productVariantButtons.getBoundingClientRect().width - $el.offsetWidth) + 'px'}"
+        ></div>
       </div>
     </div>
     <p>test</p>
