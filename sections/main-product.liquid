@@ -1,29 +1,74 @@
-
-{% comment %}
-{% assign variant_images = product.images %}
-
-{% assign variant_image = variant_images | first %}
-
-{{ product | json }}
-
-{% if variant_image %}
-    <div class="product__image-wrapper">
-        <img src="{{ variant_image | img_url: '1024x1024' }}" alt="{{ product.title | escape }}">
+<div class="relative h-screen w-full">
+  <div class="absolute bottom-28 left-0 right-0 top-0 snap-y snap-mandatory overflow-x-hidden overflow-y-scroll bg-amber-200">
+    {% for media in product.media %}
+      {{
+        media.preview_image
+        | image_url: width: 1024
+        | image_tag:
+          loading: lazy,
+          sizes: sizes,
+          class: 'h-full w-full object-cover object-contain snap-start',
+          widths: '512, 1024, 1536, 2048'
+      }}
+    {% endfor %}
+  </div>
+</div>
+<div class="relative -mt-40 w-full">
+  <div class="flex justify-end">
+    <div class="flex h-12 w-12 items-center justify-center border border-gray-100 bg-white">B1</div>
+    <div class="flex h-12 w-12 items-center justify-center border border-gray-100 bg-white">B2</div>
+  </div>
+  <div class="border-t border-gray-100 bg-white">
+    <div class="relative">
+      <div class="relative h-28 px-8 pt-4">
+        <h1 class="mr-28">Flamenco clutch in nappa calfskin</h1>
+        <div>16 variants</div>
+      </div>
+      <div class="h-8"></div>
+      <div class="absolute left-0 top-36 flex w-full px-8">
+        <div class="h-24 w-24 bg-amber-500"></div>
+        <div class="h-24 w-24 bg-amber-500"></div>
+      </div>
+      <div class="pointer-events-none sticky bottom-0 flex justify-end">
+        <div class="pointer-events-auto h-24 w-24 bg-amber-950"></div>
+      </div>
     </div>
-{% endif %}
-{% endcomment %}
-
-{% comment %}
-Use media
-{% endcomment %}
-
-{% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
-{{ variant_images.size }}
-{% for image in variant_images %}
-    {{ image | json }}
-    <img src="{{ image | img_url: '1024x1024' }}" alt="{{ product.title | escape }}">
-{% endfor %}
-
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+    <p>test</p>
+  </div>
+</div>
 
 {% schema %}
 {
