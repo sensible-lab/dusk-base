@@ -1,0 +1,7 @@
+{% for scheme in settings.color_schemes -%}
+{% if forloop.index == 1 -%} :root, {%- endif %}
+.color-scheme-{{ scheme.id }} {
+    --color-primary: {{ scheme.settings.primary.red }} {{ scheme.settings.primary.green }} {{ scheme.settings.primary.blue }};
+    --color-secondary: {{ scheme.settings.secondary.red }} {{ scheme.settings.secondary.green }} {{ scheme.settings.secondary.blue }};
+}
+{% endfor %}

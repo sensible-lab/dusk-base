@@ -1,1 +1,21 @@
-{}
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_schemes": {
+        "background-1": {
+          "settings": {
+            "primary": "#ff0000",
+            "secondary": "#00ff00"
+          }
+        },
+        "background-2": {
+          "settings": {
+            "primary": "#ffff00",
+            "secondary": "#00ffff"
+          }
+        }
+      }
+    }
+  }
+}

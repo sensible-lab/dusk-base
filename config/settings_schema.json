@@ -6,5 +6,42 @@
     "theme_author": "Sensible Lab",
     "theme_documentation_url": "https://github.com/sensible-lab/dusk-base",
     "theme_support_url": "https://github.com/sensible-lab/dusk-base"
+  },
+  {
+    "name": "t:settings_schema.colors.name",
+    "settings": [
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "color",
+            "id": "primary",
+            "label": "Primary",
+            "default": "#ff0000"
+          },
+          {
+            "type": "color",
+            "id": "secondary",
+            "label": "Secondary",
+            "default": "#00ff00"
+          }
+        ],
+        "role": {
+          "text": "primary",
+          "background": {
+            "solid": "primary"
+          },
+          "links": "primary",
+          "icons": "primary",
+          "primary_button": "primary",
+          "on_primary_button": "primary",
+          "primary_button_border": "primary",
+          "secondary_button": "secondary",
+          "on_secondary_button": "secondary",
+          "secondary_button_border": "secondary"
+        }
+      }
+    ]
   }
 ]
