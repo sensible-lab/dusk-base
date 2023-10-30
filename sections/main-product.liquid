@@ -18,7 +18,33 @@
   </div>
   <div class="hidden lg:absolute lg:bottom-0 lg:top-0 lg:flex lg:w-80 lg:flex-col">
     <div class="flex-1"></div>
-    <div class="lg:sticky lg:bottom-0 lg:bg-cyan-300">left data</div>
+    <div class="sticky bottom-0 flex h-screen flex-col">
+      <div class="flex-[3]"></div>
+      <div>
+        <h1>{{ product.title }}</h1>
+        {%- assign variant_price = product.selected_or_first_available_variant.price -%}
+        {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
+        {{ variant_price | money_with_currency }}
+        {{ variant_price_compare | money_with_currency }}
+        <p>{{ product.description }}</p>
+        {%- assign highlights = section.blocks | where: "type", "highlight" -%}
+        {%- for highlight in highlights -%}
+          <div>
+            <div>{{ highlight.settings.image }}</div>
+            <p>{{ highlight.settings.title }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="flex-[2]"></div>
+      <div>
+        {%- assign salesInfos = section.blocks | where: "type", "sales_info" -%}
+        {%- for salesInfo in salesInfos -%}
+          <div>
+            <a>{{ salesInfo.settings.title }}</a>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
   </div>
   <div class="relative -mt-40 w-full lg:absolute lg:bottom-0 lg:right-0 lg:top-0 lg:m-0 lg:flex lg:w-80 lg:flex-col">
     <div class="flex justify-end lg:hidden">
@@ -33,12 +59,15 @@
           <div>16 variants</div>
         </div>
         <div class="h-8 lg:hidden"></div>
-        <div class="absolute left-0 top-36 flex w-full px-8 lg:static lg:px-0">
-          <div class="flex lg:flex-col" x-ref="productVariantButtons">
+        <div class="absolute left-0 top-36 flex w-full px-8 lg:static lg:flex lg:h-screen lg:flex-col lg:px-0">
+          <div class="lg:flex-[3]"></div>
+          <div class="flex lg:flex-col lg:items-center" x-ref="productVariantButtons">
             <div class="h-24 w-24 bg-amber-500"></div>
             <div class="h-24 w-24 bg-amber-500"></div>
             <div class="hidden h-24 w-24 bg-amber-500 lg:block"></div>
           </div>
+          <div class="lg:flex-[2]"></div>
+          <div class="hidden lg:block">footer</div>
         </div>
         <div
           class="pointer-events-none sticky bottom-0 flex h-24 justify-end lg:hidden"
@@ -93,6 +122,40 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Highlight"
+        }
+      ]
+    },
+    {
+      "type": "sales_info",
+      "name": "Sales info",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shipping & returns"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Page"
+        }
+      ]
     }
   ],
   "settings": []
