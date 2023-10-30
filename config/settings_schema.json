@@ -6,5 +6,79 @@
     "theme_author": "Sensible Lab",
     "theme_documentation_url": "https://github.com/sensible-lab/dusk-base",
     "theme_support_url": "https://github.com/sensible-lab/dusk-base"
+  },
+  {
+    "name": "t:settings_schema.colors.name",
+    "settings": [
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "color",
+            "id": "primary",
+            "label": "Primary",
+            "default": "#ff0000"
+          },
+          {
+            "type": "color",
+            "id": "secondary",
+            "label": "Secondary",
+            "default": "#00ff00"
+          }
+        ],
+        "role": {
+          "text": "primary",
+          "background": {
+            "solid": "primary"
+          },
+          "links": "primary",
+          "icons": "primary",
+          "primary_button": "primary",
+          "on_primary_button": "primary",
+          "primary_button_border": "primary",
+          "secondary_button": "secondary",
+          "on_secondary_button": "secondary",
+          "secondary_button_border": "secondary"
+        }
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.typography.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:settings_schema.typography.settings.header__1.content"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "default": "assistant_n4",
+        "label": "t:settings_schema.typography.settings.type_header_font.label",
+        "info": "t:settings_schema.typography.settings.type_header_font.info"
+      },
+      {
+        "type": "header",
+        "content": "t:settings_schema.typography.settings.header__2.content"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "default": "assistant_n4",
+        "label": "t:settings_schema.typography.settings.type_body_font.label",
+        "info": "t:settings_schema.typography.settings.type_body_font.info"
+      },
+      {
+        "type": "range",
+        "id": "body_scale",
+        "min": 50,
+        "max": 200,
+        "step": 2.5,
+        "unit": "%",
+        "label": "t:settings_schema.typography.settings.body_scale.label",
+        "default": 100
+      }
+    ]
   }
 ]
