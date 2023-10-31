@@ -1,0 +1,18 @@
+<div
+  class="fixed bottom-0 left-0 right-0 top-0 overflow-hidden md:bg-amber-950 md:bg-opacity-50"
+  x-show="open"
+  x-cloak
+  x-transition.opacity.duration.300ms
+  @click="open = !open"
+>
+  <div
+    class="absolute bottom-0 left-0 right-0 top-0 transform bg-white transition duration-300 md:left-auto md:w-40"
+    x-show="open"
+    x-transition:enter-start="translate-y-full md:translate-y-0 md:translate-x-full"
+    x-transition:enter-end="translate-y-0 md:translate-x-0"
+    x-transition:leave-start="translate-y-0 md:translate-x-0"
+    x-transition:leave-end="translate-y-full md:translate-y-0 md:translate-x-full"
+  >
+    {{ content }}
+  </div>
+</div>

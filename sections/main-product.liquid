@@ -41,26 +41,13 @@
         {%- for salesInfo in salesInfos -%}
           <div x-data="{open: false}">
             <a @click="open = !open;">{{ salesInfo.settings.title }}</a>
-            <div
-              class="fixed bottom-0 left-0 right-0 top-0 overflow-hidden bg-amber-950 bg-opacity-50"
-              x-show="open"
-              x-cloak
-              x-transition.opacity.duration.300ms
-              @click="open = !open"
-            >
-              <div
-                class="absolute bottom-0 right-0 top-0 w-40 transform bg-white transition duration-300"
-                x-show="open"
-                x-transition:enter="delay-150"
-                x-transition:enter-start="translate-x-full"
-                x-transition:enter-end="translate-x-0"
-                x-transition:leave-start="translate-x-0"
-                x-transition:leave-end="translate-x-full"
-              >
-                {{ pages[salesInfo.settings.page].title }}
-                {{ pages[salesInfo.settings.page].content }}
-              </div>
-            </div>
+
+            {%- capture content -%}
+              {{ pages[salesInfo.settings.page].title }}
+              {{ pages[salesInfo.settings.page].content }}
+            {%- endcapture -%}
+
+            {% render 'right-drawer', content: content %}
           </div>
         {%- endfor -%}
       </div>
