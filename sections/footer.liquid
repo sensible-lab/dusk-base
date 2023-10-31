@@ -1,125 +1,117 @@
-<section>
+<section class="color-scheme-{{ section.settings.color_scheme }} bg-primary">
   <div class="container flex flex-col flex-wrap justify-between gap-12 md:flex-row{% if section.settings.logo_position == "right" %} flex-column-reverse  md:flex-row-reverse{% endif %}">
-  {%- for block in section.blocks -%}
-    {%- case block.type -%}
-      {%- when 'link_list' -%}
-
-        {%- when 'logo' -%}
-          <div class="flex flex-col align-center">
-            {%- if block.settings.image != blank -%}
-              <div class="w-32 h-32 mx-auto aspect-square">
-              <img 
-                src="{{ block.settings.image | img_url: 'master' }}" 
-                alt="{{ block.settings.image.alt }}" 
-                height="{{ block.settings.image.height}}" 
-                width="{{ block.settings.image.width }}"
-                loading="lazy"
-                class="object-contain object-center w-full h-full"
-              />
-            </div>
-            {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <span class="text-center">{{ block.settings.text }}</span>
-            {%- endif -%}
-          </div>
-      {%- endcase -%}
-  {%- endfor -%}
-  <div class="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4">
-    {%- assign link_lists = section.blocks | where: "type", "link_list" -%}
-    {%- for link_list in link_lists -%}
-    <div>
-      {%- if link_list.settings.heading != blank -%}
-        <div> 
-          <h4 class="text-lg font-bold">{{ link_list.settings.heading }}</h4>
+    {% assign logo = section.blocks | where: "type", "logo" %}
+    <div class="flex flex-col align-center">
+      {%- if logo.image != blank -%}
+        <div class="w-32 h-32 mx-auto aspect-square">
+          <img
+            src="{{ logo.image | img_url: 'master' }}"
+            alt="{{ logo.image.alt }}"
+            height="{{ logo.image.height}}"
+            width="{{ logo.image.width }}"
+            loading="lazy"
+            class="object-contain object-center w-full h-full" />
         </div>
       {%- endif -%}
-      {%- if link_list.settings.menu != blank -%}
-        <ul class="appearence-none">
-          {%- for link in link_list.settings.menu.links -%}
-            <li>
-              <a
-                href="{{ link.url }}"
-                class="{% if link.active %}{% endif %}"
-              >
-                {{ link.title }}
-              </a>
-            </li>
-          {%- endfor -%}
-        </ul>
+      {%- if logo.text != blank -%}
+        <span class="text-center">{{ logo.text }}</span>
       {%- endif -%}
     </div>
-    {%- endfor -%}
-  </div>
+    <div class="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4">
+      {%- assign link_lists = section.blocks | where: "type", "link_list" -%}
+      {%- for link_list in link_lists -%}
+        <div>
+          {%- if link_list.settings.heading != blank -%}
+            <div>
+              <h4 class="text-lg font-bold">{{ link_list.settings.heading }}</h4>
+            </div>
+          {%- endif -%}
+          {%- if link_list.settings.menu != blank -%}
+            <ul class="appearence-none">
+              {%- for link in link_list.settings.menu.links -%}
+                <li>
+                  <a href="{{ link.url }}" class="{% if link.active %}{% endif %}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
 
   </div>
 </section>
 
 {% schema %}
-{
-  "name": "Footer",
-  "tag": "footer",
-  "class": "mt-auto",
-  "settings": [{
-    "type": "radio",
-    "id": "logo_position",
-    "label": "Logo Position",
-    "options": [
+  {
+    "name": "Footer",
+    "tag": "footer",
+    "class": "mt-auto",
+    "settings": [
       {
-        "value": "left",
-        "label": "Left"
-      },
-      {
-        "value": "right",
-        "label": "Right"
+        "type": "radio",
+        "id": "logo_position",
+        "label": "Logo Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "background-1"
       }
-    ]
-  }],
-  "blocks": [
-    {
-      "type": "link_list", 
-      "name": "Link List",
-      "settings": [
+    ],
+    "blocks": [
+      {
+        "type": "link_list",
+        "name": "Link List",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "heading",
+            "default": "Quick links",
+            "label": "Quick Links"
+          }, {
+            "type": "link_list",
+            "id": "menu",
+            "default": "footer",
+            "label": "Link Label",
+            "info": "Info"
+          }
+        ]
+      }, {
+        "type": "logo",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }, {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      }
+    ],
+    "default": {
+      "blocks": [
         {
-          "type": "inline_richtext",
-          "id": "heading",
-          "default": "Quick links",
-          "label": "Quick Links"
-        },
-        {
-          "type": "link_list",
-          "id": "menu",
-          "default": "footer",
-          "label": "Link Label",
-          "info": "Info"
-        }
-      ]
-    },
-    {
-      "type": "logo",
-      "name": "Logo",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Text"
+          "type": "logo"
+        }, {
+          "type": "link_list"
         }
       ]
     }
-  ],
-  "default": {
-    "blocks": [
-      {
-        "type": "logo"
-      },
-      {
-        "type": "link_list"
-      }
-    ]
   }
-}
 {% endschema %}
