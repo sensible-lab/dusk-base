@@ -5,8 +5,12 @@
     <div x-text='variant.title'>{{ product.selected_or_first_available_variant.title }}</div>
     {%- assign variant_price = product.selected_or_first_available_variant.price -%}
     {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
-    {{ variant_price | money_with_currency }}
-    {{ variant_price_compare | money_with_currency }}
+    <div x-text="$money(variant.price, window.money_with_currency_format)">
+      {{ variant_price | money_with_currency }}
+    </div>
+    <div x-text="$money(variant.compare_at_price, window.money_with_currency_format)">
+      {{ variant_price_compare | money_with_currency }}
+    </div>
   </div>
   <div>
     {% for variant in product.variants %}
@@ -25,7 +29,7 @@
     {% endfor %}
   </div>
 
-  <pre x-text='JSON.stringify(variant, null, 2)'></pre>
+  {% comment %}<pre x-text='JSON.stringify(variant, null, 2)'></pre>{% endcomment %}
   <div>
     <h2>Featured image</h2>
     <img
@@ -38,7 +42,7 @@
         {{ product.selected_or_first_available_variant.featured_image | image_url: width: 1536 }} 1536w,
         {{ product.selected_or_first_available_variant.featured_image | image_url: width: 2048 }} 2048w
       '
-      :srcset='generateImgSrcSet(variant.featured_image.src, [512, 1024, 1536, 2048])'
+      :srcset='$genImgSrcSet(variant.featured_image.src, [512, 1024, 1536, 2048])'
       :src='variant.featured_image.src'
     >
   </div>
@@ -54,132 +58,6 @@
     {% endfor %}
   </div>
 </div>
-
-{% comment %}
-  <div class="lg:relative">
-    <div class="relative h-screen w-full lg:h-auto">
-      <div class="absolute bottom-28 left-0 right-0 top-0 snap-y snap-mandatory overflow-y-auto overflow-x-hidden lg:static lg:overflow-auto">
-        {% for media in product.media %}
-          <div class="h-full w-full snap-start pt-5 lg:h-screen lg:px-80">
-            {{
-              media.preview_image
-              | image_url: width: 1024
-              | image_tag:
-                loading: lazy,
-                sizes: sizes,
-                class: 'block w-full h-full max-w-full max-h-full object-contain',
-                widths: '512, 1024, 1536, 2048'
-            }}
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="hidden lg:absolute lg:bottom-0 lg:top-0 lg:z-10 lg:flex lg:w-80 lg:flex-col">
-      <div class="flex-1"></div>
-      <div class="sticky bottom-0 flex h-screen flex-col">
-        <div class="flex-[3]"></div>
-        <div>
-          <h1>{{ product.title }}</h1>
-          {%- assign variant_price = product.selected_or_first_available_variant.price -%}
-          {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
-          {{ variant_price | money_with_currency }}
-          {{ variant_price_compare | money_with_currency }}
-          <p>{{ product.description }}</p>
-          {%- assign highlights = section.blocks | where: 'type', 'highlight' -%}
-          {%- for highlight in highlights -%}
-            <div>
-              <div>{{ highlight.settings.image }}</div>
-              <p>{{ highlight.settings.title }}</p>
-            </div>
-          {%- endfor -%}
-        </div>
-        <div class="flex-[2]"></div>
-        <div>
-          {%- assign salesInfos = section.blocks | where: 'type', 'sales_info' -%}
-          {%- for salesInfo in salesInfos -%}
-            <div x-data="{open: false}">
-              <a @click="open = !open;">{{ salesInfo.settings.title }}</a>
-
-              {%- capture content -%}
-                {{ pages[salesInfo.settings.page].title }}
-                {{ pages[salesInfo.settings.page].content }}
-              {%- endcapture -%}
-
-              {% render 'right-drawer', content: content %}
-            </div>
-          {%- endfor -%}
-        </div>
-      </div>
-    </div>
-    <div class="relative z-0 -mt-40 w-full lg:absolute lg:bottom-0 lg:right-0 lg:top-0 lg:m-0 lg:flex lg:w-80 lg:flex-col">
-      <div class="flex justify-end lg:hidden">
-        <div class="flex h-12 w-12 items-center justify-center border border-gray-100 bg-white">B1</div>
-        <div class="flex h-12 w-12 items-center justify-center border border-gray-100 bg-white">B2</div>
-      </div>
-      <div class="hidden lg:block lg:flex-1"></div>
-      <div class="border-t border-gray-100 bg-white lg:sticky lg:bottom-0 lg:border-0 lg:bg-transparent">
-        <div class="relative" x-data="{ pinned: true }">
-          <div class="relative h-28 px-8 pt-4 lg:hidden">
-            <h1 class="mr-28 font-bold">Flamenco clutch in nappa calfskin</h1>
-            <div>16 variants</div>
-          </div>
-          <div class="h-8 lg:hidden"></div>
-          <div class="absolute left-0 top-36 flex w-full px-8 lg:static lg:flex lg:h-screen lg:flex-col lg:px-0">
-            <div class="lg:flex-[3]"></div>
-            <div class="flex lg:flex-col lg:items-center" x-ref="productVariantButtons">
-              <div class="h-24 w-24 bg-amber-500"></div>
-              <div class="h-24 w-24 bg-amber-500"></div>
-              <div class="hidden h-24 w-24 bg-amber-500 lg:block"></div>
-            </div>
-            <div class="lg:flex-[2]"></div>
-            <div class="hidden lg:block">footer</div>
-          </div>
-          <div
-            class="pointer-events-none sticky bottom-0 flex h-24 justify-end lg:hidden"
-          >
-            <div
-              class="absolute top-full h-1 w-1"
-              x-intersect:enter.threshold.100="pinned = false;"
-              x-intersect:leave.threshold.100="pinned = true;"
-            ></div>
-            <div
-              class="pointer-events-auto h-24 w-24 bg-amber-950 transition-[margin-right] lg:hidden"
-              :style="!pinned && { 'margin-right': (window.innerWidth - $refs.productVariantButtons.getBoundingClientRect().left - $refs.productVariantButtons.getBoundingClientRect().width - $el.offsetWidth) + 'px'}"
-            ></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div>
-    Extra components here
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-    <p>components</p>
-  </div>
-{% endcomment %}
 
 {% schema %}
 {
