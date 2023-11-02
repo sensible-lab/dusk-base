@@ -1,0 +1,65 @@
+{% comment %} {
+    "type": "text",
+    "id": "facebook_link",
+    "label": "Facebook Link"
+  },
+  {
+    "type": "text",
+    "id": "instagram_link",
+    "label": "Instagram Link"
+  },
+  {
+    "type": "text",
+    "id": "youtube_link",
+    "label": "Youtube Link"
+  },
+  {
+    "type": "text",
+    "id": "tiktok_link",
+    "label": "Tiktok Link"
+  },
+  {
+    "type": "text",
+    "id": "twitter_link",
+    "label": "Twitter Link"
+  },
+  {
+    "type": "text",
+    "id": "pinterest_link",
+    "label": "Pinterest Link"
+  },
+  {
+    "type": "text",
+    "id": "snapchat_link",
+    "label": "Snapchat Link"
+  },
+  {
+    "type": "text",
+    "id": "tumblr_link",
+    "label": "Tumblr Link"
+  },
+  {
+    "type": "text",
+    "id": "vimeo_link",
+    "label": "Vimeo Link"
+  }, {% endcomment %}
+{% case social_media_id %}
+    {% when 'facebook' %}
+        {% render 'icon-facebook' %}
+    {% when 'instagram' %}
+        {% render 'icon-instagram' %}
+    {% when 'youtube' %}
+        {% render 'icon-youtube' %}
+    {% when 'tiktok' %}
+        {% render 'icon-tiktok' %}
+    {% when 'twitter' %}
+        {% render 'icon-twitter' %}
+    {% when 'pinterest' %}
+        {% render 'icon-pinterest' %}
+    {% when 'snapchat' %}
+        {% render 'icon-snapchat' %}
+    {% when 'tumblr' %}
+        {% render 'icon-tumblr' %}
+    {% when 'vimeo' %}
+        {% render 'icon-vimeo' %}
+{% endcase %}

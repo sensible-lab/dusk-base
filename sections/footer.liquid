@@ -1,23 +1,23 @@
-<section class="color-scheme-{{ section.settings.color_scheme }} bg-primary">
+<section class="color-scheme-{{ section.settings.color_scheme }} bg-primary py-4">
   <div class="container flex flex-col flex-wrap justify-between gap-12 md:flex-row{% if section.settings.logo_position == "right" %} flex-column-reverse  md:flex-row-reverse{% endif %}">
-    {% assign logo = section.blocks | where: "type", "logo" %}
+    {% assign logo_block = section.blocks | where: "type", "logo" | first %}
     <div class="flex flex-col align-center">
-      {%- if logo.image != blank -%}
+      {%- if logo_block.settings.image != blank -%}
         <div class="w-32 h-32 mx-auto aspect-square">
           <img
-            src="{{ logo.image | img_url: 'master' }}"
-            alt="{{ logo.image.alt }}"
-            height="{{ logo.image.height}}"
-            width="{{ logo.image.width }}"
+            src="{{ logo_block.settings.image | img_url: "master" }}"
+            alt="{{ logo_block.settings.image.alt }}"
+            height="{{ logo_block.settings.image.height}}"
+            width="{{ logo_block.settings.image.width }}"
             loading="lazy"
             class="object-contain object-center w-full h-full" />
         </div>
       {%- endif -%}
-      {%- if logo.text != blank -%}
-        <span class="text-center">{{ logo.text }}</span>
+      {%- if logo_block.settings.text != blank -%}
+        <span class="text-center">{{ logo_block.settings.text }}</span>
       {%- endif -%}
     </div>
-    <div class="flex flex-col flex-wrap gap-2 md:flex-row md:gap-4">
+    <div class="flex flex-col flex-wrap gap-2 md:flex-row md:gap-8">
       {%- assign link_lists = section.blocks | where: "type", "link_list" -%}
       {%- for link_list in link_lists -%}
         <div>
@@ -40,8 +40,24 @@
         </div>
       {%- endfor -%}
     </div>
-
   </div>
+  <div class="container mt-8">
+    {% assign social_media_block = section.blocks | where: "type", "social_media" %}
+    {% for social_media in social_media_block %}
+      {% if social_media.settings.link != blank %}
+        <a href="{{ social_media.settings.link }}">
+          {% if section.settings.social_media_use_icon %}
+            <div class="w-8 h-8">
+            {% comment %} {{ social_media.settings.social_media_id }} {% endcomment %}
+            {% render 'social-media-icons', social_media_id: social_media.settings.social_media_id %}
+            <span>
+          {% else %}
+            {{ social_media.settings.social_media_id }}
+          {% endif %}
+        </a>
+      {% endif %}
+    {% endfor %}
+    </div>
 </section>
 
 {% schema %}
@@ -68,6 +84,25 @@
         "id": "color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "background-1"
+      },
+      {
+        "type": "checkbox",
+        "id": "social_media_use_icon",
+        "label": "Use Social Media Icon?"
+      },
+      {
+        "type": "radio",
+        "id": "icon_position",
+        "label": "Icon Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
       }
     ],
     "blocks": [
@@ -100,6 +135,60 @@
             "type": "text",
             "id": "text",
             "label": "Text"
+          }
+        ]
+      },
+      {
+        "type": "social_media",
+        "name": "Social Media",
+        "settings": [
+          {
+            "type": "text",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "select",
+            "id": "social_media_id",
+            "label": "Social Media",
+            "options": [
+              {
+                "value": "facebook",
+                "label": "Facebook"
+              },
+              {
+                "value": "instagram",
+                "label": "Instagram"
+              },
+              {
+                "value": "youtube",
+                "label": "Youtube"
+              },
+              {
+                "value": "tiktok",
+                "label": "Tiktok"
+              },
+              {
+                "value": "twitter",
+                "label": "Twitter"
+              },
+              {
+                "value": "pinterest",
+                "label": "Pinterest"
+              },
+              {
+                "value": "snapchat",
+                "label": "Snapchat"
+              },
+              {
+                "value": "tumblr",
+                "label": "Tumblr"
+              },
+              {
+                "value": "vimeo",
+                "label": "Vimeo"
+              }
+            ]
           }
         ]
       }
