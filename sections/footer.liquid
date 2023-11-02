@@ -41,7 +41,7 @@
       {%- endfor -%}
     </div>
   </div>
-  <div class="container mt-8">
+  <div class="container flex gap-2 mt-8">
     {% assign social_media_block = section.blocks | where: "type", "social_media" %}
     {% for social_media in social_media_block %}
       {% if social_media.settings.link != blank %}
@@ -50,9 +50,9 @@
             <div class="w-8 h-8">
             {% comment %} {{ social_media.settings.social_media_id }} {% endcomment %}
             {% render 'social-media-icons', social_media_id: social_media.settings.social_media_id %}
-            <span>
+            </div>
           {% else %}
-            {{ social_media.settings.social_media_id }}
+            {% render 'social-media-names', social_media_id: social_media.settings.social_media_id %}
           {% endif %}
         </a>
       {% endif %}
