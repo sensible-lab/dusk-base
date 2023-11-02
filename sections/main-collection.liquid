@@ -1,1 +1,92 @@
 main collection
+<h1>{{ collection.title }}</h1>
+{% if collection.description != blank %}
+  <div>
+    {{ collection.description }}
+  </div>
+{% endif %}
+
+<div>
+  {%- liquid
+    assign sort_by = results.sort_by | default: results.default_sort_by
+    assign total_active_values = 0
+    if results.url
+      assign results_url = results.url
+    else
+      assign terms = results.terms | escape
+      assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+    endif
+  -%}
+
+  <h1>Sort & filter</h1>
+  <div>
+    <h2>Existing filters:</h2>
+  </div>
+  <form>
+    <div>
+      <h2>Filter</h2>
+
+    </div>
+    <div>
+      <h2>Sort</h2>
+      <label for='SortBy'>{{ 'products.facets.sort_by_label' | t }}</label>
+      <select
+        name='sort_by'
+        id='SortBy'
+        aria-describedby='a11y-refresh-page-message'
+      >
+        {%- for option in collection.sort_options -%}
+          <option
+            value='{{ option.value | escape }}'
+            {% if option.value == sort_by %}
+              selected='selected'
+            {% endif %}
+          >
+            {{ option.name | escape }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+    <div>
+      <h2>Count</h2>
+      <h2>
+        {%- if collection.results_count -%}
+          {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
+        {%- elsif collection.products_count == collection.all_products_count -%}
+          {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+        {%- else -%}
+          {{
+            'products.facets.product_count'
+            | t: product_count: collection.products_count, count: collection.all_products_count
+          }}
+        {%- endif -%}
+      </h2>
+    </div>
+  </form>
+</div>
+
+<div>
+  <h1>Products</h1>
+  {%- paginate collection.products by 20 -%}
+    {% comment %}no product to show{% endcomment %}
+    {%- if collection.products.size == 0 -%}
+      {{
+        'sections.collection_template.use_fewer_filters_html'
+        | t: link: collection.url, class: 'underlined-link link'
+      }}
+
+    {%- else -%}
+      <ul>
+        {%- for product in collection.products -%}
+          <li>
+            <a href='{{ product.url }}'>{{ product.title }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if paginate.pages > 1 -%}
+        {{- paginate | default_pagination -}}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>

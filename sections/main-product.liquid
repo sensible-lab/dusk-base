@@ -1,14 +1,13 @@
-<div class='h-40'>spacer</div>
 <div x-data='{ variants: {{ product.variants | json }}, variant: {{ product.selected_or_first_available_variant | json }} }'>
   <div>{{ product.title }}</div>
   <div>
     <div x-text='variant.title'>{{ product.selected_or_first_available_variant.title }}</div>
     {%- assign variant_price = product.selected_or_first_available_variant.price -%}
     {%- assign variant_price_compare = product.selected_or_first_available_variant.compare_at_price -%}
-    <div x-text="$money(variant.price, window.money_with_currency_format)">
+    <div x-text='$money(variant.price, window.money_with_currency_format)'>
       {{ variant_price | money_with_currency }}
     </div>
-    <div x-text="$money(variant.compare_at_price, window.money_with_currency_format)">
+    <div x-text='$money(variant.compare_at_price, window.money_with_currency_format)'>
       {{ variant_price_compare | money_with_currency }}
     </div>
   </div>
