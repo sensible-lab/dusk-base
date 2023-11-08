@@ -1,92 +1,155 @@
-main collection
-<h1>{{ collection.title }}</h1>
-{% if collection.description != blank %}
-  <div>
-    {{ collection.description }}
-  </div>
-{% endif %}
-
-<div>
-  {%- liquid
-    assign sort_by = results.sort_by | default: results.default_sort_by
-    assign total_active_values = 0
-    if results.url
-      assign results_url = results.url
-    else
-      assign terms = results.terms | escape
-      assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
-    endif
-  -%}
-
-  <h1>Sort & filter</h1>
-  <div>
-    <h2>Existing filters:</h2>
-  </div>
-  <form>
+<div x-data="{sectionId:'{{ section.id }}'}" x-ref='section'>
+  main collection
+  <h1>{{ collection.title }}</h1>
+  {% if collection.description != blank %}
     <div>
-      <h2>Filter</h2>
-
+      {{ collection.description }}
     </div>
+  {% endif %}
+
+  <div>
+    {%- liquid
+      assign sort_by = results.sort_by | default: results.default_sort_by
+      assign total_active_values = 0
+      if results.url
+        assign results_url = results.url
+      else
+        assign terms = results.terms | escape
+        assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+      endif
+    -%}
+
+    <h1>Sort & filter</h1>
     <div>
-      <h2>Sort</h2>
-      <label for='SortBy'>{{ 'products.facets.sort_by_label' | t }}</label>
-      <select
-        name='sort_by'
-        id='SortBy'
-        aria-describedby='a11y-refresh-page-message'
-      >
-        {%- for option in collection.sort_options -%}
-          <option
-            value='{{ option.value | escape }}'
-            {% if option.value == sort_by %}
-              selected='selected'
+      <h2>Existing filters:</h2>
+    </div>
+    <form
+      @submit.prevent='
+        const formData = new FormData($el);
+        const queryString = new URLSearchParams(formData).toString();
+        fetch(`?section_id=${$data.sectionId}&${queryString}`).then(async (res)=> {
+          $refs.section.parentNode.outerHTML = await res.text();
+          history.pushState({}, "", `?${queryString}`);
+        })
+      '
+    >
+      <input type='submit'>
+      <div>
+        <h2>Filter</h2>
+        {%- for filter in collection.filters -%}
+          <div>{{ filter.label }}</div>
+
+          {% if filter.type == 'price_range' %}
+            {% if filter.min_value.value %}
+              <div>{{ filter.min_value.value | money }}</div>
             {% endif %}
-          >
-            {{ option.name | escape }}
-          </option>
+            <input
+              type='number'
+              placeholder='0'
+              min='0'
+              value='{{ filter.min_value.value | money_without_currency | replace: ',', '' }}'
+              max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+              name='{{ filter.min_value.param_name }}'
+            >
+
+            <input
+              type='number'
+              placeholder='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+              min='0'
+              value='{{ filter.max_value.value | money_without_currency | replace: ',', '' }}'
+              max='{{ filter.range_max | money_without_currency | replace: ',', '' }}'
+              name='{{ filter.max_value.param_name }}'
+            >
+            {% if filter.max_value.value %}
+              <div>{{ filter.max_value.value | money }}</div>
+            {% endif %}
+            {% comment %}<div>{{ filter.param_name }}</div>{% endcomment %}
+            {% comment %}<div>{{ filter.range_max | money }}</div>{% endcomment %}
+            {% comment %}<div>{{ filter.url_to_remove }}</div>{% endcomment %}
+          {% endif %}
+
+          {% comment %}<div>{{ filter.type }}</div>{% endcomment %}
+          {% comment %}<div>{{ filter.param_name }}</div>{% endcomment %}
+          {% comment %}<div>{{ filter.min_value }}</div>{% endcomment %}
+          {% comment %}<div>{{ filter.max_value }}</div>{% endcomment %}
+          {% comment %}<div>{{ filter.values | json }}</div>{% endcomment %}
         {%- endfor -%}
-      </select>
-    </div>
-    <div>
-      <h2>Count</h2>
-      <h2>
-        {%- if collection.results_count -%}
-          {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
-        {%- elsif collection.products_count == collection.all_products_count -%}
-          {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
-        {%- else -%}
-          {{
-            'products.facets.product_count'
-            | t: product_count: collection.products_count, count: collection.all_products_count
-          }}
+      </div>
+      <div>
+        <h2>Sort</h2>
+        <label for='SortBy'>{{ 'products.facets.sort_by_label' | t }}</label>
+        <select
+          name='sort_by'
+          id='SortBy'
+          aria-describedby='a11y-refresh-page-message'
+          @change='$el.form.requestSubmit()'
+        >
+          {%- for option in collection.sort_options -%}
+            <option
+              value='{{ option.value | escape }}'
+              {% if option.value == sort_by %}
+                selected='selected'
+              {% endif %}
+            >
+              {{ option.name | escape }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+      <div>
+        <h2>Count</h2>
+        <h2>
+          {%- if collection.results_count -%}
+            {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
+          {%- elsif collection.products_count == collection.all_products_count -%}
+            {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+          {%- else -%}
+            {{
+              'products.facets.product_count'
+              | t: product_count: collection.products_count, count: collection.all_products_count
+            }}
+          {%- endif -%}
+        </h2>
+      </div>
+    </form>
+  </div>
+
+  <div>
+    <h1>Products</h1>
+    {%- paginate collection.products by 20 -%}
+      {% comment %}no product to show{% endcomment %}
+      {%- if collection.products.size == 0 -%}
+        {{
+          'sections.collection_template.use_fewer_filters_html'
+          | t: link: collection.url, class: 'underlined-link link'
+        }}
+
+      {%- else -%}
+        <ul>
+          {%- for product in collection.products -%}
+            <li>
+              <a href='{{ product.url }}'>{{ product.title }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          {{- paginate | default_pagination -}}
         {%- endif -%}
-      </h2>
-    </div>
-  </form>
-</div>
-
-<div>
-  <h1>Products</h1>
-  {%- paginate collection.products by 20 -%}
-    {% comment %}no product to show{% endcomment %}
-    {%- if collection.products.size == 0 -%}
-      {{
-        'sections.collection_template.use_fewer_filters_html'
-        | t: link: collection.url, class: 'underlined-link link'
-      }}
-
-    {%- else -%}
-      <ul>
-        {%- for product in collection.products -%}
-          <li>
-            <a href='{{ product.url }}'>{{ product.title }}</a>
-          </li>
-        {%- endfor -%}
-      </ul>
-
-      {%- if paginate.pages > 1 -%}
-        {{- paginate | default_pagination -}}
       {%- endif -%}
-    {%- endif -%}
-  {%- endpaginate -%}
+    {%- endpaginate -%}
+  </div>
 </div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "settings": []
+}
+{% endschema %}
